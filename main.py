@@ -1,10 +1,11 @@
 from classes import db
 
-db.mkDb("Loja") # equivalente ao create db ""
+local = db.DB("./data/") #Instanciando a aplicação
 
-db = db.useDb("loja") # equivalente ao use database
+local.mkDb("Loja") # Criando um db
 
-db.rmDb(db) # equivalente ao drop db
+local.useDb("Loja") #use db
+
+local.mkData("Produtos")
 
 
-#db.mkData("Loja", "Usuarios") #use database + create table

@@ -1,20 +1,60 @@
 import json
 import os
 
-## Função para criar os dados:
-def mkDb(nome):
-    db_path = "./data/"
+## Função para useDB
 
-    if not os.path.exists(db_path):
-        os.makedirs(db_path) #Se não tiver a pasta, crie.
+#Isso aqui é uma instancia do banco todo, do app todo
+#Dentro dessa instancia eu vou criar as databases
+class DB:
+    def __init__ (self, data_path, dbItens):
+
+        if not os.path.exists(self.db_path):
+            os.makedirs(self.db_path) #Se não tiver a pasta, crie.
+
+        self.db_path = data_path
+        self.dbItens = dbItens
+
+
+
+
+    ## Função para criar um "tabela":
+    def mkDb(self, nome): 
+        try:
+            with open(f'{self.db_path}{nome}.json', 'w') as f:
+                json.dump({}, f)
+            
+            self.dbItens.append(nome)
+            print("db created")
+
+        except (OSError, IOError) as e:
+            print(f"db can't be created. Error: {e}")
+
+
+    #Use database (equivalente)
+    def useDb(self, nome):
+        if nome in self.dbItens and os.path.exists(self.db_path):
+            index = self.dbItens.index(nome)
+            return index
+        else:
+            print(f"{nome} não exsite")
+
+
+
+
+
+##Função para deletar dados
+def rmDb(nome):
+    caminho_arquivo = f'./data/{nome}.json'
 
     try:
-        with open(f'{db_path}{nome}.json', 'w') as f:
-            json.dump({}, f)
-        print("db created")
+        os.remove(caminho_arquivo)
+        print(f"{nome} deletado com sucesso")
+    except FileNotFoundError:
+        print(f"{nome}' não existe.")
+    except Exception as e:
+        print(f"Erro na deleção: {e}")
 
-    except (OSError, IOError) as e:
-        print(f"db can't be created. Error: {e}")
+##Função para criar uma "tabela" no banco
 
 def mkData(db, nome):
     db_path = f"./data/{db}.json"
